@@ -17,6 +17,7 @@ def api_search_request(
     headers = {}
     if token:
         headers['Authorization'] = f'Bearer {token}'
+        headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36'
 
     with allure.step(
         f"Выполняем GET запрос с параметрами: {params}"
