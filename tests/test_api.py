@@ -22,8 +22,8 @@ class TestSearchAPI:
         with allure.step(
             f"Поиск по фразе: {TestData.VALID_PHRASES[phrase_type]}"
         ):
-            response = api_search_request(params)
-
+            response = api_search_request(params, TestData.VALID_TOKENS)
+            
         assert response.status_code == 200, (
             f"Ожидался код 200, получен {response.status_code}"
         )
@@ -63,7 +63,7 @@ class TestSearchAPI:
         with allure.step(
             f"Поиск по невалид. фразе: {TestData.INVALID_PHRASES[phrase_type]}"
         ):
-            response = api_search_request(params)
+            response = api_search_request(params, TestData.VALID_TOKENS)
 
         assert response.status_code == expected_status, (
             f"Ожидался код {expected_status}, получен {response.status_code}"
