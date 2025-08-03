@@ -3,107 +3,76 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-
 class BasePage:
-    """Базовый класс Page Object для веб-страниц."""
-
     def __init__(self, driver: WebDriver):
-        """Инициализация драйвера и ожиданий.
-            Args:
-            driver: Экземпляр Selenium WebDriver.
-        """
         self.driver = driver
         self.wait = WebDriverWait(driver, 10)
-
+    
     def open(self, url: str):
-        """Открывает указанный URL в браузере.
-            Args:
-            url: Адрес страницы для открытия.
-        """
+        """Открывает указанный URL"""
         self.driver.get(url)
-
+    
     def search(self, text: str):
-        """Выполняет поиск по тексту.
-            Args:
-            text: Текст для поиска.
-        """
-        locator = (By.CSS_SELECTOR, "input.search-input")
-        search_input = self.wait.until(EC.presence_of_element_located(locator))
+        """Выполняет поиск по тексту"""
+        search_input = self.wait.until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='search']"))
+        )
         search_input.clear()
         search_input.send_keys(text)
-        search_input.submit()
-
+        search_button = self.wait.until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[type='submit']"))
+        )
+        search_button.click()
+    
     def enter_search_text(self, text: str):
-        """Вводит текст в поле поиска без отправки.
-            Args:
-            text: Текст для ввода.
-        """
-        locator = (By.CSS_SELECTOR, "input.search-input")
-        search_input = self.wait.until(EC.presence_of_element_located(locator))
+        """Вводит текст в поле поиска без отправки"""
+        search_input = self.wait.until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='search']"))
+        )
         search_input.clear()
         search_input.send_keys(text)
-
+    
     def has_search_results(self) -> bool:
-        """Проверяет наличие результатов поиска.
-            Returns:
-            bool: True, если результаты есть.
-        """
+        """Проверяет наличие результатов поиска"""
         try:
-            locator = (By.CSS_SELECTOR, ".search-results .item")
             return len(self.wait.until(
-                EC.presence_of_all_elements_located(locator)
-                )) > 0
-        except Exception:
+                EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".product-card"))
+            )) > 0
+        except:
             return False
-
+    
     def has_empty_search_message(self) -> bool:
-        """Проверяет сообщение о пустом поиске.
-            Returns:
-            bool: True, если сообщение отображается.
-        """
+        """Проверяет наличие сообщения о пустом поиске"""
         try:
-            locator = (By.CSS_SELECTOR, ".empty-search-message")
             return self.wait.until(
-                EC.presence_of_element_located(locator)
-                ).is_displayed()
-        except Exception:
+                EC.presence_of_element_located((By.CSS_SELECTOR, ".search-empty"))
+            ).is_displayed()
+        except:
             return False
-
+    
     def has_error_message(self) -> bool:
-        """Проверяет наличие сообщения об ошибке.
-            Returns:
-            bool: True, если ошибка отображается.
-        """
+        """Проверяет наличие сообщения об ошибке"""
         try:
-            locator = (By.CSS_SELECTOR, ".error-message")
             return self.wait.until(
-                EC.presence_of_element_located(locator)
-                ).is_displayed()
-        except Exception:
+                EC.presence_of_element_located((By.CSS_SELECTOR, ".search-error"))
+            ).is_displayed()
+        except:
             return False
-
+    
     def has_search_suggestions(self) -> bool:
-        """Проверяет подсказки при поиске.
-            Returns:
-            bool: True, если подсказки есть.
-        """
+        """Проверяет наличие подсказок поиска"""
         try:
-            locator = (By.CSS_SELECTOR, ".search-suggestions .item")
             return len(self.wait.until(
-                EC.presence_of_all_elements_located(locator)
-                )) > 0
-        except Exception:
+                EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".suggestions-item"))
+            )) > 0
+        except:
             return False
-
+    
     def has_search_history(self) -> bool:
-        """Проверяет историю поиска.
-            Returns:
-            bool: True, если история отображается.
-        """
+        """Проверяет наличие истории поиска"""
         try:
-            locator = (By.CSS_SELECTOR, ".search-history .item")
             return len(self.wait.until(
-                EC.presence_of_all_elements_located(locator)
-                )) > 0
-        except Exception:
+                EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".history-item"))
+            )) > 0
+        except:
             return False
