@@ -15,7 +15,7 @@ class BasePage:
     def search(self, text: str):
         """Выполняет поиск по тексту"""
         search_input = self.wait.until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='search']"))
+            EC.presence_of_element_located((By.CSS_SELECTOR, "input[name='search']"))
         )
         search_input.clear()
         search_input.send_keys(text)
@@ -27,7 +27,7 @@ class BasePage:
     def enter_search_text(self, text: str):
         """Вводит текст в поле поиска без отправки"""
         search_input = self.wait.until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='search']"))
+            EC.presence_of_element_located((By.CSS_SELECTOR, "input[name='search']"))
         )
         search_input.clear()
         search_input.send_keys(text)
@@ -41,20 +41,20 @@ class BasePage:
         except:
             return False
     
-    def has_empty_search_message(self) -> bool:
-        """Проверяет наличие сообщения о пустом поиске"""
-        try:
-            return self.wait.until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, ".search-empty"))
-            ).is_displayed()
-        except:
-            return False
+    # def has_empty_search_message(self) -> bool:
+    #     """Проверяет наличие сообщения о пустом поиске"""
+    #     try:
+    #         return self.wait.until(
+    #             EC.presence_of_element_located((By.CSS_SELECTOR, ".search-empty"))
+    #         ).is_displayed()
+    #     except:
+    #         return False
     
-    def has_error_message(self) -> bool:
+    def has_not_found_message(self) -> bool:
         """Проверяет наличие сообщения об ошибке"""
         try:
             return self.wait.until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, ".search-error"))
+                EC.presence_of_element_located((By.XPATH, "//*[text()='Похоже, у нас такого нет']"))
             ).is_displayed()
         except:
             return False
@@ -63,16 +63,25 @@ class BasePage:
         """Проверяет наличие подсказок поиска"""
         try:
             return len(self.wait.until(
-                EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".suggestions-item"))
+                EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".suggests-list"))
             )) > 0
         except:
             return False
     
-    def has_search_history(self) -> bool:
+    def has_catalog_filters(self) -> bool:
         """Проверяет наличие истории поиска"""
         try:
             return len(self.wait.until(
-                EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".history-item"))
+                EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".app-catalog-filters"))
+            )) > 0
+        except:
+            return False
+
+    def has_filter_status(self) -> bool:
+        """Проверяет наличие истории поиска"""
+        try:
+            return len(self.wait.until(
+                EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".filter-status"))
             )) > 0
         except:
             return False
